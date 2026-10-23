@@ -1,0 +1,33 @@
+# Environment variables and secrets (Never commit API keys!)
+.env
+*.env
+!.env.example
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# ChromaDB vector store persistent storage
+chroma_db/
+test_chroma_db/
+
+# Streamlit local configurations and cache
+.streamlit/
+
+# Uploaded user files and duplicate PDFs (preserve original in data/History_2024-25.pdf)
+data/uploads/
+uploads/
+*.tmp
+
+# OS specific files
+.DS_Store
+Thumbs.db
