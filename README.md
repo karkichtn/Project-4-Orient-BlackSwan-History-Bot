@@ -1,6 +1,6 @@
-# Project 4 — Orient BlackSwan History Assistant
+# Project 4 — Orient BlackSwan History Bot
 
-An academic, strictly-grounded Retrieval-Augmented Generation (RAG) system built to query the **Orient BlackSwan History (2024–25)** catalogue and general historical PDF documents.
+An academic, strictly-grounded Retrieval-Augmented Generation (RAG) system built specifically to query the **Orient BlackSwan History (2024–25)** catalogue (`data/History_2024-25.pdf`).
 
 Built with **Python 3.10+ / 3.14**, **Streamlit**, **LangChain**, **ChromaDB**, **Sentence Transformers (all-MiniLM-L6-v2)**, and **Google Gemini (gemini-2.5-flash)**.
 
@@ -8,12 +8,12 @@ Built with **Python 3.10+ / 3.14**, **Streamlit**, **LangChain**, **ChromaDB**, 
 
 ## 1. Project Overview & Key Features
 
-* **Strict Retrieval-Augmented Grounding**: Synthesizes answers exclusively from retrieved excerpts within the catalogue. Speculation, external general knowledge, and internet search are suppressed.
-* **Exact Fallback Compliance**: When the document lacks direct, verified factual evidence, the application returns **`Not found`** with zero citations.
+* **Strict Retrieval-Augmented Grounding**: Synthesizes answers exclusively from retrieved excerpts within `History_2024-25.pdf`. Speculation, external general knowledge, and internet search are suppressed.
+* **Exact Fallback Compliance**: When the catalogue lacks direct, verified factual evidence, the application returns exactly **`Not found`** with zero citations.
 * **Anti-Hallucination Citation Validation**: Citations returned by the model are rigorously validated against the text chunks actually retrieved from ChromaDB. Fabricated passage IDs or invented quotes are automatically detected and dropped.
 * **Dual Page Metadata Tracking**: Distinguishes between physical PDF page numbers (`1..91`) and printed book page labels (`i`, `ii`, `iii`, `1`, `2`, ..., `88`), ensuring accurate citations matching the printed book.
-* **Stale Document & Duplicate Protection**: Employs SHA-256 fingerprinting to prevent accidental re-indexing and automatically purges outdated vectors if a document is replaced.
-* **Polished Academic Dark UI**: Professional Streamlit interface featuring benchmark question pills, progress feedback, expandable citation cards, and vector database management.
+* **Stale Document & Duplicate Protection**: Employs SHA-256 fingerprinting to prevent accidental re-indexing.
+* **Minimal Classic Dark UI**: Clean single-page Streamlit interface featuring Title, subtitle, `Process Document` button, question input, `Ask Question` button, answer card, and collapsible `Source` section.
 
 ---
 
@@ -21,7 +21,7 @@ Built with **Python 3.10+ / 3.14**, **Streamlit**, **LangChain**, **ChromaDB**, 
 
 | Component | Technology | Version | Purpose |
 | :--- | :--- | :--- | :--- |
-| **User Interface** | [Streamlit](https://streamlit.io/) | `>=1.35.0` | Dark-themed research dashboard with real-time Q&A and citations |
+| **User Interface** | [Streamlit](https://streamlit.io/) | `>=1.35.0` | Minimal classic dark interface for History catalogue Q&A |
 | **Orchestration** | [LangChain](https://www.langchain.com/) | `>=1.0.0` | End-to-end RAG pipeline, loaders, and text splitters |
 | **Vector Database** | [ChromaDB](https://www.trychroma.com/) | `>=1.3.0` | Local persistent vector storage and cosine similarity search |
 | **Chroma Integration**| [langchain-chroma](https://pypi.org/project/langchain-chroma/) | `>=1.0.0` | Native LangChain vector store integration |
@@ -67,18 +67,17 @@ flowchart TD
 ```text
 gen ai pdf/
 ├── data/
-│   ├── History_2024-25.pdf     # Orient BlackSwan History textbook catalogue (42.9 MB, 91 pages)
-│   └── uploads/                # Directory for user-uploaded custom PDFs
+│   └── History_2024-25.pdf     # Orient BlackSwan History textbook catalogue (42.9 MB, 91 pages)
 ├── chroma_db/                  # Persistent ChromaDB vector database (generated on ingestion)
 │   └── ingest_metadata.json    # SHA-256 document fingerprint & chunk statistics
 ├── docs/
-│   └── screenshots/            # Genuine application screenshots
+│   └── screenshots/            # Application screenshots and capture instructions
 ├── tests/                      # Automated offline pytest test suite
 │   ├── conftest.py             # Pytest fixtures and mock embeddings
 │   ├── test_pdf_ingest.py      # PDF extraction, hashing, and splitting tests
 │   ├── test_citation_validator.py # Citation validation and hallucination rejection tests
 │   └── test_rag_pipeline.py    # End-to-end RAG mock pipeline tests
-├── app.py                      # Streamlit academic research assistant UI
+├── app.py                      # Orient BlackSwan History Bot Streamlit UI
 ├── ask.py                      # Grounded retrieval, Gemini QA chain, and citation validator
 ├── ingest.py                   # PDF extraction, chunking, embeddings, and ChromaDB storage
 ├── test_questions.py           # Benchmark test runner for the 5 assignment questions
@@ -163,10 +162,10 @@ streamlit run app.py
 Open your browser at: **`http://localhost:8501`**
 
 **Minimal Classic Workflow:**
-1. **Document Selection / Upload**: By default, the app uses the included `data/History_2024-25.pdf`. You can also upload any custom PDF via the file uploader.
-2. **Process Document**: Click the **Process Document** button to chunk and index the document into local ChromaDB using Hugging Face embeddings.
-3. **Ask Question**: Type your query (e.g., *"When was Orient BlackSwan incorporated?"*) and click **Ask Question**.
-4. **Clean Answer & Sources**: View the factual answer (or exact `Not found` fallback) and click the collapsible **View Sources** expander to inspect the verified page numbers and supporting passages.
+1. **Document Readiness**: The application automatically connects to the indexed `data/History_2024-25.pdf` catalogue.
+2. **Process Document**: If you ever need to recreate or rebuild the index, click **Process Document**.
+3. **Ask Question**: Type your query (e.g. *"When was Orient BlackSwan incorporated?"*) into the input field and click **Ask Question**.
+4. **Answer & Source**: View the clean, concise answer (or exact `Not found` fallback) and expand the **Source** section to view the verified PDF page numbers and supporting passage citations.
 
 ---
 
